@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="Scripts/jquery-2.2.3.min.js"></script>
+</head>
+<body>
+    <div>
+        <button id="btnTemizle">Temizle</button>
+    </div>
+    <div>
+        <button id="btnUrun">Ürünlerin Hepsini Getir</button>
+    </div>
+    <div>
+        <select id="urunadet">
+            <option>5</option>
+            <option>10</option>
+            <option>20</option>
+        </select>
+        <button id="btnSayi">Sayıya Göre Getir</button>
+    </div>
+    <div>
+        <label>Aranacak ProductName</label>
+        <input type="text" id="pname" name="name" />
+    </div>
+    <div>
+        <button id="btnAra">Ara</button>
+    </div>
+
+
+    <ul></ul>
+</body>
+</html>
+<script>
+    //?$filter=startswith(PhoneNumber,'6')
+
+    $("#btnAra").click(function () {
+        var aranacak = $("#pname").val();
+        var x = GetProduct("http://localhost:49354/api/product/?$filter=startswith(ProductName," + "'" + aranacak + "')");
+        Doldur(x);
+    })
+
+    $("#btnSayi").click(function () {
+        var adet = $("#urunadet option:selected").text();
+        var x = GetProduct("http://localhost:49354/api/product/?$top=" + adet);
+        Doldur(x);
+    })
+
+    $("#btnUrun").click(function () {
+        var x = GetProduct("http://localhost:49354/api/product/")
+        Doldur(x);
+    })
+    
+
+    function Doldur(y) {
+        $.each(y, function (key, value) {
+            $("ul").append("<li>" + value.ProductName + "</li>")
+        })
+    }
+
+
+
+    var data = {};
+    function GetProduct(url) {
+        $.ajax({
+            async:false,
+            url:url,
+            type:"GET",
+            success: function (result) {
+                data = result;
+            }
+        })
+        return data;
+       
+    }
+
+    $("#btnTemizle").click(function () {
+        $("li").remove();
+    })
+
+
+
+</script>
